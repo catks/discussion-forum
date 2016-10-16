@@ -54,4 +54,34 @@ RSpec.describe Post, type: :model do
     end
   end
 
+  describe "Pagination" do
+
+    before(:all) do
+      create_posts
+    end
+
+    it "paginate 10 items in default configuration" do
+      expect(Post.page(1).count).to eq(10)
+    end
+
+    it "can paginate in another number" do
+      Post.max_items_for_page = 5
+      expect(Post.page(2).count).to eq(5)
+    end
+
+    it "return a array of pages" do
+      expect(Post.pages).to all(be_an(Integer))
+    end
+
+    it "return the correct number of pages" do
+      expect((Post.count / Post.max_items_for_page.to_f).ceil).to eq(Post.pages.last)
+    end
+
+    it "return the last page" do
+      num_of_last_items = Post.last_page.count
+      expect(Post.last_page).to eq(Post.last(num_of_last_items))
+    end
+
+  end
+
 end
