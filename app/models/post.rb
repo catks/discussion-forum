@@ -7,7 +7,12 @@ class Post < ApplicationRecord
   before_destroy { |record| raise ActiveRecord::ReadOnlyRecord }
   before_update :prevent_update
   before_create :censor_post_fields
+
   validates :title,:body,:author,presence: true
+
+  #Pagination macros
+  set_pagination_order "updated_at desc"
+  set_max_items_for_page 10
 
   def root_post?
     parent_id.nil?
