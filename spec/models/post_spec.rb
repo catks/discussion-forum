@@ -82,6 +82,10 @@ RSpec.describe Post, type: :model do
       expect(Post.last_page).to eq(Post.last(num_of_last_items))
     end
 
+    it "return all if page is nil" do
+      expect(Post.page(nil)).to eq(Post.all)
+    end
+
   end
 
 end
