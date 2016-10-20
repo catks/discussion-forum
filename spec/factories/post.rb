@@ -8,4 +8,10 @@ FactoryGirl.define do
   factory :censored_post, parent: :post do
     body "badword"
   end
+
+  factory :invalid_post, parent: :post do
+    title nil
+    author nil
+    body nil
+  end
 end
