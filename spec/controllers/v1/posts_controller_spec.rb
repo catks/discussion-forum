@@ -4,6 +4,7 @@ RSpec.describe V1::PostsController, type: :controller do
   include PostSpecHelpers
 
   describe "GET #index" do
+    let(:all_root_posts_in_order){Post.root_posts.order("updated_at desc")}
     it "returns http success" do
       get :index
       expect(response).to have_http_status(:success)
@@ -12,7 +13,7 @@ RSpec.describe V1::PostsController, type: :controller do
     context "without params" do
       it "returns all root posts" do
         get :index
-        expect(response.body).to eq(Post.root_posts.to_json)
+        expect(response.body).to eq(all_root_posts_in_order.to_json)
       end
     end
 

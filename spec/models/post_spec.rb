@@ -55,13 +55,23 @@ RSpec.describe Post, type: :model do
   end
 
   describe "Pagination" do
-
+    let(:order){"updated_at desc"}
+    let(:all_posts_in_order){Post.order(order)}
     before(:all) do
       create_posts
     end
 
     it "paginate 10 items in default configuration" do
       expect(Post.page(1).count).to eq(10)
+    end
+
+    it "is default sorted by 'updated_at desc'" do
+      expect(Post.page(1)).to eq(all_posts_in_order.first(10))
+    end
+
+    it "can be sorted in another way" do
+      other_sort_method = "created_at asc"
+      expect(Post.page(1, order: other_sort_method)).to eq(Post.order(other_sort_method).first(10))
     end
 
     it "can paginate in another number" do
@@ -79,11 +89,11 @@ RSpec.describe Post, type: :model do
 
     it "return the last page" do
       num_of_last_items = Post.last_page.count
-      expect(Post.last_page).to eq(Post.last(num_of_last_items))
+      expect(Post.last_page).to eq(all_posts_in_order.last(num_of_last_items))
     end
 
-    it "return all if page is nil" do
-      expect(Post.page(nil)).to eq(Post.all)
+    it "return all posts if page is nil" do
+      expect(Post.page(nil)).to eq(all_posts_in_order)
     end
 
     it "accepts page number as string or as a number" do

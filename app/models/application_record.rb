@@ -9,11 +9,11 @@ class ApplicationRecord < ActiveRecord::Base
       @max_items_for_page ||= 10
     end
 
-    def page(num)
+    def page(num, order: "updated_at desc")
       if num.nil?
-        self.all
+        self.order order
       else
-        self.offset((num.to_i-1)*max_items_for_page).limit(max_items_for_page)
+        self.order(order).offset((num.to_i-1)*max_items_for_page).limit(max_items_for_page)
       end
     end
 
