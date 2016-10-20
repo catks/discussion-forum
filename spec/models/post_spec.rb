@@ -86,6 +86,10 @@ RSpec.describe Post, type: :model do
       expect(Post.page(nil)).to eq(Post.all)
     end
 
+    it "accepts page number as string or as a number" do
+      expect(Post.page("2")).to eq(Post.page(2))
+    end
+
   end
 
 end

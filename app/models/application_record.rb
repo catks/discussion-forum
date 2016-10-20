@@ -13,7 +13,7 @@ class ApplicationRecord < ActiveRecord::Base
       if num.nil?
         self.all
       else
-        self.offset((num-1)*max_items_for_page).limit(max_items_for_page)
+        self.offset((num.to_i-1)*max_items_for_page).limit(max_items_for_page)
       end
     end
 
