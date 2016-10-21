@@ -10,8 +10,8 @@ module CensorConcern
 
   def censor(text)
     text&.split(" ")&.reduce("") do |words, word|
-      words + bad_words_hash[word]
-    end
+      words + " " + bad_words_hash[word]
+    end.lstrip
   end
 
   def bad_words

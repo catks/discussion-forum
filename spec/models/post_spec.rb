@@ -10,6 +10,8 @@ RSpec.describe Post, type: :model do
   let(:bad_word){BAD_WORDS.sample}
   let(:post_with_comments){FactoryGirl.create(:post,:with_comments)}
   let(:post_without_comments){FactoryGirl.create(:post)}
+  let(:ok_sentence){"The secret of the world is 42"}
+  let(:bad_sentence){"#{BAD_WORDS.sample} #{BAD_WORDS.sample} e super legal"}
 
   it "can be created with valid parameters" do
     post.save!
@@ -54,6 +56,14 @@ RSpec.describe Post, type: :model do
     end
     it "bad words in body" do
       expect(create(:post,title: bad_word).title).to match(/\*+/)
+    end
+
+    it "return the same sentence if none badwords are found" do
+      expect(create(:post,title: ok_sentence).title).to eq(ok_sentence)
+    end
+
+    it "return the a sentence with same size" do
+      expect(create(:post,title: bad_sentence).title.size).to eq(bad_sentence.size)
     end
   end
 
