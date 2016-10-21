@@ -23,6 +23,10 @@ class Post < ApplicationRecord
     self.body = censor(self.body)
   end
 
+  def users
+    ([self.author] + self.comments.collect{ |post| post.users }.flatten).uniq
+  end
+
   private
   def prevent_update
     return true if self.changed == ["parent_id"]

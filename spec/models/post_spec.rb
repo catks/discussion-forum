@@ -57,9 +57,7 @@ RSpec.describe Post, type: :model do
   describe "Pagination" do
     let(:order){"updated_at desc"}
     let(:all_posts_in_order){Post.order(order)}
-    before(:all) do
-      create_posts
-    end
+    before(:all){create_posts}
 
     it "paginate 10 items in default configuration" do
       expect(Post.page(1).count).to eq(10)
@@ -98,6 +96,25 @@ RSpec.describe Post, type: :model do
 
     it "accepts page number as string or as a number" do
       expect(Post.page("2")).to eq(Post.page(2))
+    end
+
+  end
+
+  describe "#users" do
+    EMAIL_REGEX ||= NotificationMail::EMAIL_REGEX
+    let(:post_with_comments){FactoryGirl.create(:post,:with_comments)}
+    let(:post_without_comments){FactoryGirl.create(:post)}
+
+    context "post with comments" do
+      it "returns all users emails that either created or commentend on a post" do
+        expect(post_with_comments.users).to all(match(EMAIL_REGEX))
+      end
+    end
+
+    context "post without comments" do
+      it "return the author email" do
+        expect(post_without_comments.users).to eq([post_without_comments.author])
+      end
     end
 
   end
