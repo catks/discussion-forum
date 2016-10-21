@@ -7,10 +7,13 @@ RSpec.describe NotificationMail, type: :model do
   after(:all){delete_random_emails} #Delete new emails created by let 'new_email'
 
   let(:valid_notification_mail){FactoryGirl.build(:notification_mail)}
+  let(:notification_mail){NotificationMail.all.sample}
   let(:mail_with_notifications){FactoryGirl.create(:notification_mail, :with_notifications)}
-  let(:existing_email){NotificationMail.all.sample.user}
+  let(:existing_user){NotificationMail.all.sample.user}
+  let(:existing_email){existing_user}
   let(:new_email){"random#{Random.new.rand(1000)}@mail.com"}
   let(:invalid_email){"invalid@mail"}
+  let(:post_with_comments){FactoryGirl.create(:post,:with_comments)}
 
   it "can be created with valid attributes" do
     valid_notification_mail.save!
@@ -47,7 +50,17 @@ RSpec.describe NotificationMail, type: :model do
     expect(mail_with_notifications).to_not have_unsent_notifications
   end
 
-  describe ".mail_of" do
+  it "can count the number of notifications" do
+    expect(mail_with_notifications.count).to eq(mail_with_notifications.notifications.size)
+  end
+
+  describe "#add" do
+    it "can add a new notification passing only the message" do
+      expect{notification_mail.add(message: "Some cool notification")}.to change{notification_mail.count}.by(1)
+    end
+  end
+
+  describe "::mail_of" do
     it "return a mail of a specific user mailbox" do
       expect(NotificationMail.mail_of(existing_email)).to be_an(NotificationMail)
     end
@@ -59,5 +72,18 @@ RSpec.describe NotificationMail, type: :model do
     it "dont create a new NotificationMail when user email is invalid" do
       expect{NotificationMail.mail_of(invalid_email)}.to raise_error(ActiveRecord::RecordInvalid)
     end
+  end
+
+  describe "::notify" do
+    it "notify a single user" do
+      mail_inbox = NotificationMail.mail_of(existing_user)
+      expect{NotificationMail.notify(user: existing_user, message: "Test Message")}.to change{mail_inbox.count}.by(1)
+    end
+
+    it "notify a colletion of users" do
+      mails = post_with_comments.users.collect{ |user| NotificationMail.mail_of(user) }
+      expect{NotificationMail.notify(users: post_with_comments.users, message: "Another Test Message")}.to change{mails.sample.count}.by(1)
+    end
+
   end
 end

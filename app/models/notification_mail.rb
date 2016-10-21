@@ -21,6 +21,26 @@ class NotificationMail < ApplicationRecord
     end
   end
 
+  def count
+    self.notifications.size
+  end
+
+  def add(notification_message)
+    Notification.create(message: notification_message,notification_mail_id: self.id)
+  end
+
+  def self.notify(message:,user: nil ,users: nil)
+    if user
+      NotificationMail.mail_of(user).add(message)
+    elsif users
+      users.each do |u|
+        NotificationMail.mail_of(u).add(message)
+      end
+    else
+      raise "notify must receives either user or users to notify"
+    end
+  end
+
   def self.mail_of(user)
     raise ActiveRecord::RecordInvalid if !user.match EMAIL_REGEX
     NotificationMail.find_by_user(user) || NotificationMail.create(user: user)
