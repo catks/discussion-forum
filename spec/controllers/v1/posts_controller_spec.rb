@@ -27,18 +27,33 @@ RSpec.describe V1::PostsController, type: :controller do
   end
 
   describe "POST #create" do
+    let(:post_attributes){attributes_for(:post)}
     it "returns http success" do
-      post :create, params:{post: attributes_for(:post)}
+      post :create, params:{post: post_attributes}
       expect(response).to have_http_status(:success)
     end
 
     it "create a new post" do
-      expect{post :create, params:{post: attributes_for(:post)}}.to change{Post.count}.by(1)
+      expect{post :create, params:{post: post_attributes}}.to change{Post.count}.by(1)
     end
 
     it "can't create post with invalid attributes" do
       expect{post :create, params:{post: attributes_for(:invalid_post)}}.to_not change{Post.count}
     end
+
+    it "should notify the author" do
+      author = post_attributes[:author]
+      expect{post :create, params:{post: post_attributes}}.to change{NotificationMail.mail_of(author).count}.by(1)
+    end
+
+    it "should notify all the users vinculated to the post" do
+      title = post_attributes[:title]
+      post :create, params:{post: post_attributes}
+      users = Post.last.users
+      last_notifications_messages = users.collect{ |user| NotificationMail.mail_of(user).notifications.last.message }
+      expect(last_notifications_messages).to all(match(/#{title}/i))
+    end
+
   end
 
   describe "GET #show" do

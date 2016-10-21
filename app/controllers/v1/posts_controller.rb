@@ -7,7 +7,11 @@ class V1::PostsController < ApplicationController
   end
 
   def create
-    Post.create(post_params)
+    post = Post.create(post_params)
+    if post.valid?
+      message = post.root_post? ? "Post #{post.title} created" : "Comment #{post.title} in #{post.root_parent.title}"
+      NotificationMail.notify(users: post.root_parent.users, message: message)
+    end
   end
 
   def show
