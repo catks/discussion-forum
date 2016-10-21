@@ -1,7 +1,7 @@
 class NotificationMail < ApplicationRecord
+  EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   has_many :notifications
-
-  validates_format_of :user, with: /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+  validates_format_of :user, with: EMAIL_REGEX
   validates :user,uniqueness: true
   def sent_notifications
     self.notifications.select{ |n| n.sent? }
@@ -19,5 +19,10 @@ class NotificationMail < ApplicationRecord
     self.unsent_notifications.each do |notification|
       notification.sent = true
     end
+  end
+
+  def self.mail_of(user)
+    raise ActiveRecord::RecordInvalid if !user.match EMAIL_REGEX
+    NotificationMail.find_by_user(user) || NotificationMail.create(user: user)
   end
 end
