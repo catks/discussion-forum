@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161015180104) do
+ActiveRecord::Schema.define(version: 20161021150720) do
+
+  create_table "notification_mails", force: :cascade do |t|
+    t.string   "user"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.string   "message"
+    t.boolean  "sent",                 default: false
+    t.integer  "notification_mail_id"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.index ["notification_mail_id"], name: "index_notifications_on_notification_mail_id"
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string   "title"
