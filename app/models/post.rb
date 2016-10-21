@@ -18,6 +18,14 @@ class Post < ApplicationRecord
     parent_id.nil?
   end
 
+  def root_parent
+    post = self
+    until(post.root_post?) do
+      post = post.parent
+    end
+    post
+  end
+
   def censor_post_fields
     self.title = censor(self.title)
     self.body = censor(self.body)

@@ -5,8 +5,11 @@ RSpec.describe Post, type: :model do
   let(:post){FactoryGirl.build(:post)}
   let(:censored_post){FactoryGirl.build(:censored_post)}
   let(:existing_post){FactoryGirl.create(:post)}
+  let(:root_post){existing_post}
   let(:post_attributes){FactoryGirl.attributes_for(:post)}
   let(:bad_word){BAD_WORDS.sample}
+  let(:post_with_comments){FactoryGirl.create(:post,:with_comments)}
+  let(:post_without_comments){FactoryGirl.create(:post)}
 
   it "can be created with valid parameters" do
     post.save!
@@ -102,8 +105,6 @@ RSpec.describe Post, type: :model do
 
   describe "#users" do
     EMAIL_REGEX ||= NotificationMail::EMAIL_REGEX
-    let(:post_with_comments){FactoryGirl.create(:post,:with_comments)}
-    let(:post_without_comments){FactoryGirl.create(:post)}
 
     context "post with comments" do
       it "returns all users emails that either created or commentend on a post" do
@@ -117,6 +118,21 @@ RSpec.describe Post, type: :model do
       end
     end
 
+  end
+
+  describe "#root_parent" do
+    context "post is a comment" do
+      it "returns the root post that a post is vinculated to" do
+        comment = post_with_comments.comments.first
+        expect(comment.root_parent).to eq(post_with_comments)
+      end
+    end
+
+    context "post is a root post" do
+      it "returns itself" do
+        expect(root_post.root_parent).to eq(root_post)
+      end
+    end
   end
 
 end
