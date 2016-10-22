@@ -54,6 +54,10 @@ RSpec.describe NotificationMail, type: :model do
     expect(mail_with_notifications.count).to eq(mail_with_notifications.notifications.size)
   end
 
+  it "can list NotificationMails with unsent notifications" do
+    expect(NotificationMail.with_unsent_notifications).to eq(NotificationMail.select{ |nm| nm.has_unsent_notifications? })
+  end
+
   describe "#add" do
     it "can add a new notification passing only the message" do
       expect{notification_mail.add(message: "Some cool notification")}.to change{notification_mail.count}.by(1)

@@ -3,6 +3,7 @@ class NotificationMail < ApplicationRecord
   has_many :notifications
   validates_format_of :user, with: EMAIL_REGEX
   validates :user,uniqueness: true
+
   def sent_notifications
     self.notifications.select{ |n| n.sent? }
   end
@@ -46,4 +47,9 @@ class NotificationMail < ApplicationRecord
     raise ActiveRecord::RecordInvalid if !user.match EMAIL_REGEX
     NotificationMail.find_by_user(user) || NotificationMail.create(user: user)
   end
+
+  def self.with_unsent_notifications
+    select{ |nm| nm.has_unsent_notifications? }
+  end
+
 end
