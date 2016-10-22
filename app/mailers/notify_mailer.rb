@@ -1,5 +1,5 @@
 class NotifyMailer < ApplicationMailer
-  default from: 'discussion.forum321@gmail.com'
+  default from: 'discussion.forum@mail.com'
 
   after_action :set_notifications_as_sent
   def notifications_email(notification_mail) #Receives a NotificationMail instance as parameter

@@ -59,4 +59,14 @@ Rails.application.configure do
   #  :authentication       => "plain",
   #  :enable_starttls_auto => true
   #}
+
+  # SMTP settings for mail.com
+  # ActionMailer::Base.smtp_settings = {
+  #   :port           => 587,
+  #   :address        => "smtp.mail.com",
+  #   :domain         => 'mail.com',
+  #   :user_name      => ENV['email_login'],
+  #   :password       => ENV['email_password'],
+  #   :authentication => :plain,
+  # }
 end
