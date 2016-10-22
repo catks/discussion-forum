@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
 # Use Puma as the app server
@@ -17,6 +16,10 @@ gem 'puma', '~> 3.0'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
+
+#Schedule tasks with whenever
+gem 'whenever', :require => false
+
 group :production do
   gem 'pg'
 end
