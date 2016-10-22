@@ -13,6 +13,6 @@ class NotifyMailer < ApplicationMailer
   private
 
   def set_notifications_as_sent
-    @notifications&.each{ |notification| notification.sent = true }
+    @notifications&.each{ |notification| notification.sent = true; notification.save! }
   end
 end

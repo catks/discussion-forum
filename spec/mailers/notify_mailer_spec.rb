@@ -12,8 +12,7 @@ RSpec.describe NotifyMailer, type: :mailer do
 
     it "mark all unsent notifications as sent after sending the email" do
       expect { NotifyMailer.notifications_email(notification_mail_with_notifications).deliver_now }
-        .to change { notification_mail_with_notifications.unsent_notifications.size }.to(0)
-
+        .to change { notification_mail_with_notifications.reload.unsent_notifications.size }.to(0)
     end
   end
 
