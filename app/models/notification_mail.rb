@@ -15,9 +15,10 @@ class NotificationMail < ApplicationRecord
     !unsent_notifications.empty?
   end
 
-  def mark_all_as_sent
+  def mark_all_as_sent!
     self.unsent_notifications.each do |notification|
       notification.sent = true
+      notification.save!
     end
   end
 

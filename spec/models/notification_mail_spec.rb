@@ -46,7 +46,7 @@ RSpec.describe NotificationMail, type: :model do
   end
 
   it "can mark all notifications as sent" do
-    mail_with_notifications.mark_all_as_sent
+    mail_with_notifications.mark_all_as_sent!
     expect(mail_with_notifications).to_not have_unsent_notifications
   end
 
