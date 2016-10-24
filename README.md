@@ -91,7 +91,7 @@ A Post and comments are the same object the only differance is that a post can b
 
 ### Censorship
 
-The censorship is implemented in CensorConcern at `app/models/concerns/`, all the bad words must be listed in `config/bad_words`, to add a new word just place the new word in another line. If the title or the body of a post or comment contains bad words they are automatically censored with "*" (A "\*" for each character in the bad word). The Censor is case insensitive so if you set 'ugly' as a bad word 'Ugly' or 'UGLY' will be censored as well.
+The censorship is implemented in CensorConcern at `app/models/concerns/`, all the bad words must be listed in `config/bad_words`, to add a new word just place the new word in another line. If the title or the body of a post or comment contains bad words they are automatically censored with '\*' (A '\*' for each character in the bad word). The Censor is case insensitive so if you set 'ugly' as a bad word 'Ugly' or 'UGLY' will be censored as well.
 
 ### Pagination
 
