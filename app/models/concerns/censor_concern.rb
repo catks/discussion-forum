@@ -1,7 +1,7 @@
 module CensorConcern
   extend ActiveSupport::Concern
   BAD_WORDS ||= File.read("#{Rails.root.to_s}/config/bad_words").split("\n")
-
+  BAD_WORDS_REGEX = Regexp.union(BAD_WORDS.map{ |word| Regexp.new(word,true) })
   def censor_fields(*fields)
     fields.each do |field|
       self.send("#{field}=",super(censor(self.send(field))))
@@ -24,8 +24,13 @@ module CensorConcern
 
   #Return the same word if not a bad word or **** if it is
   def bad_words_hash
-    Hash.new{ |h,k| h[k] = k}.merge(
-      Hash[bad_words.map{ |word| [word,word.gsub(/./,"*")]}]
-    )
+    Hash.new do |h,k|
+      matched_data = k.match BAD_WORDS_REGEX
+      if matched_data
+        h[k] = matched_data[0].gsub(/./,"*")
+      else
+        h[k] = k
+      end
+    end
   end
 end

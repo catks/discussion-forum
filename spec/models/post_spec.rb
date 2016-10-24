@@ -50,7 +50,7 @@ RSpec.describe Post, type: :model do
     expect(existing_post.comments).not_to be_empty
   end
 
-  describe "censor" do
+  describe "Censorship" do
     it "bad words in title" do
       expect(create(:post,title: bad_word).title).to match(/\*+/)
     end
@@ -65,6 +65,11 @@ RSpec.describe Post, type: :model do
     it "return the a sentence with same size" do
       expect(create(:post,title: bad_sentence).title.size).to eq(bad_sentence.size)
     end
+
+    it 'is case insensitive' do
+      expect(create(:post,title: bad_word.capitalize).title).to match(/\*+/)
+    end
+
   end
 
   describe "Pagination" do
